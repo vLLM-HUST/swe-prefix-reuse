@@ -67,6 +67,29 @@ from routing successive turns to different replicas. Header support was verified
 by the CPU protocol fixture; an eight-chip inference result must still establish
 its own cache/ownership evidence before publication.
 
+## Raising a serving limit also needs graph-coverage review
+
+On the same pinned native TP2 deployment, raising only `max_num_seqs` from16 to32
+retained a graph-capture maximum of48 tokens. With MTP2, a full32-lane decode batch
+needs96 tokens; the pinned vLLM `v1/cudagraph_dispatcher.py` explicitly returns
+`CUDAGraphMode.NONE` above the configured maximum. Check this before spending a
+measurement window: an admitted request slot is not evidence of graph coverage.
+
+Two separate900s observations retained the24.25GiB/chip KV budget and passed C32
+protocol, prefix-reuse, no-preemption and cleanup gates. Original max48 capture
+measured135.53 tokens/s/chip and P90 decode9.72; adding96 capture measured207.88
+and21.01, with peak KV65.1%. This supports a consequential route/configuration
+effect, not a precise causal speedup estimate on a shared host. Even the latter
+window did not beat the capacity16 C16 observation (221.95 and38.93). Capacity,
+throughput and per-request speed are different judgments; more slots need not
+improve the observed tradeoff.
+
+Retained evidence is in the same campaign root under `native32-c32/` and
+`native32-c32-graph96/`; each keeps its actual graph configuration and result.
+Do not join these points to a server-limit16 concurrency line. The capacity gate
+observes actual running requests and preemption counters, fails closed on missing
+counters, and does not certify32 simultaneous full-256K contexts.
+
 Local preparation evidence from initial development lives outside the repository
 at `/workspace/my-ascend-workspace/runs/swe-token-continuation/`. Portable provenance
 and shape observations live in data/README.md; no local path is required to run the
