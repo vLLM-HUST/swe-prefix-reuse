@@ -1,0 +1,10 @@
+swe-prefix-reuse
+Copyright 2026 vLLM-HUST contributors
+
+The streaming completions client and measurement conventions are adapted from
+vLLM, Copyright contributors to the vLLM project, licensed under Apache-2.0.
+Exact source anchors and intentional changes are documented in docs/UPSTREAM.md.
+
+The bundled Open-SWE-Traces subset is a separate data work attributed to NVIDIA,
+licensed CC-BY-4.0, not Apache-2.0. See data/README.md and
+data/LICENSE-CC-BY-4.0.txt. No endorsement by the upstream authors is implied.
