@@ -97,6 +97,8 @@ cannot prove vocabulary identity.
   immediately when the previous response has been validated.
 - A finished session is replaced immediately from the fixed cyclic source queue.
   No spread, arrival-rate schedule, simulated tool execution or think time.
+- The same session identity is sent as `X-Correlation-ID` for sticky attention/DP
+  routing through a compatible relay; native endpoints may ignore this header.
 - Each session play has a fresh `cache_salt`, unchanged across its own turns. This
   preserves within-session reuse while preventing artificial full-cache hits on
   repeated traces. **Cross-session common-prefix reuse is intentionally excluded.**

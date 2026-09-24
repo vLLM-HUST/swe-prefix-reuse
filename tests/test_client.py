@@ -33,6 +33,7 @@ async def endpoint(handler):
 
 async def reply(req, *, fault=None, delay=0):
     body = await req.json()
+    assert req.headers["X-Correlation-ID"] == body["cache_salt"]
     n = body["max_tokens"]
     stream = web.StreamResponse(headers={"Content-Type": "text/event-stream"})
     await stream.prepare(req)

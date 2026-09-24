@@ -94,7 +94,8 @@ async def request(session, url, model, prompt, budget, salt, seed):
         "return_token_ids": True,
         "cache_salt": salt,
     }
-    headers = {}
+    # Session-affine relays must keep every turn on the same attention/DP rank.
+    headers = {"X-Correlation-ID": salt}
     if key := os.environ.get("OPENAI_API_KEY"):
         headers["Authorization"] = f"Bearer {key}"
     output = RequestOutput(start=time.perf_counter())
