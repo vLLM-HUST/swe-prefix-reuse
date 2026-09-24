@@ -88,3 +88,11 @@ prepared prompts, exact output budgets, timing and fresh-play salts. Artifacts
 record declared DP size, policy and per-request rank. CPU HTTP fixtures verify
 opt-in behavior, lane distribution and replacement continuity; real engine
 cache/load acceptance remains required. Servers may ignore unsupported headers.
+
+Bounded real-engine check: client860e7c9 (0.1.2), the same prepared SWE file,
+Qwen35 native BF16/MTP2/256K DP2+EP2, C2/60s completed13 strict-protocol requests,
+99.987% full client concurrency,5 requests with cached input (maximum6144).
+Both rank-specific cache counters increased; server exited0. Evidence:
+workspace `runs/qwen35-parallel-matrix-20260924/native-dp2-ep2-swe-protocol/`.
+This qualifies this deployment's routing/protocol only, not other servers or a
+Frontier performance window.
