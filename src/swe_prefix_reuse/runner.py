@@ -76,9 +76,23 @@ def summarize(records, start, stop, concurrency, chips):
 
 
 async def replay(
-    workload, *, url, model, concurrency, duration, chips, seed=0, timeout=1800, run_id=None
+    workload,
+    *,
+    url,
+    model,
+    concurrency,
+    duration,
+    chips,
+    seed=0,
+    timeout=1800,
+    run_id=None,
+    data_parallel_size=None,
 ):
     validate_workload(workload)
+    if data_parallel_size is not None and (
+        type(data_parallel_size) is not int or not 1 <= data_parallel_size <= chips
+    ):
+        raise ValueError("data_parallel_size must be a positive integer no larger than chips")
     if (
         concurrency < 1
         or chips < 1
@@ -100,6 +114,7 @@ async def replay(
 
         async def lane(lane_id):
             nonlocal next_session
+            dp_rank = None if data_parallel_size is None else lane_id % data_parallel_size
             play = 0
             while time.perf_counter() < stop and not aborted.is_set():
                 session_index = next_session % len(workload["sessions"])
@@ -122,10 +137,12 @@ async def replay(
                         turn["output_tokens"],
                         salt,
                         seed + session_index + turn_index,
+                        data_parallel_rank=dp_rank,
                     )
                     row = output.record(prompt)
                     row.update(
                         lane=lane_id,
+                        data_parallel_rank=dp_rank,
                         play=play,
                         trajectory_id=trace["trajectory_id"],
                         turn=turn_index,
@@ -190,6 +207,10 @@ def run(args):
         "workload_sha256": hashlib.sha256(Path(args.workload).read_bytes()).hexdigest(),
         "tokenizer": workload["tokenizer"],
         "concurrency": args.concurrency,
+        "data_parallel_size": args.data_parallel_size,
+        "routing_policy": "lane modulo DP size via X-data-parallel-rank"
+        if args.data_parallel_size is not None
+        else "server/relay managed; X-Correlation-ID per session",
         "duration": args.duration,
         "chips": args.chips,
         "seed": args.seed,
@@ -212,6 +233,7 @@ def run(args):
                 seed=args.seed,
                 timeout=args.timeout,
                 run_id=run_id,
+                data_parallel_size=args.data_parallel_size,
             )
         )
     except BaseException as exc:

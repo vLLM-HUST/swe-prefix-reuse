@@ -99,6 +99,12 @@ cannot prove vocabulary identity.
   No spread, arrival-rate schedule, simulated tool execution or think time.
 - The same session identity is sent as `X-Correlation-ID` for sticky attention/DP
   routing through a compatible relay; native endpoints may ignore this header.
+- For native vLLM DP, set `--data-parallel-size N` to route lane `i` to rank
+  `i % N` via `X-data-parallel-rank`. This keeps each lane's turns on one cache
+  owner and distributes lanes evenly, rather than relying on load-balancer luck.
+  The flag does not configure the server; verify its rank-header support and
+  per-rank load/cache metrics. With C below N, some attention ranks have no lane.
+  Omit it for relays with their own affinity contract. Routing is saved in results.
 - Each session play has a fresh `cache_salt`, unchanged across its own turns. This
   preserves within-session reuse while preventing artificial full-cache hits on
   repeated traces. **Cross-session common-prefix reuse is intentionally excluded.**

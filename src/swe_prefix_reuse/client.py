@@ -81,7 +81,7 @@ class RequestOutput:
         }
 
 
-async def request(session, url, model, prompt, budget, salt, seed):
+async def request(session, url, model, prompt, budget, salt, seed, *, data_parallel_rank=None):
     payload = {
         "model": model,
         "prompt": prompt,
@@ -96,6 +96,8 @@ async def request(session, url, model, prompt, budget, salt, seed):
     }
     # Session-affine relays must keep every turn on the same attention/DP rank.
     headers = {"X-Correlation-ID": salt}
+    if data_parallel_rank is not None:
+        headers["X-data-parallel-rank"] = str(data_parallel_rank)
     if key := os.environ.get("OPENAI_API_KEY"):
         headers["Authorization"] = f"Bearer {key}"
     output = RequestOutput(start=time.perf_counter())

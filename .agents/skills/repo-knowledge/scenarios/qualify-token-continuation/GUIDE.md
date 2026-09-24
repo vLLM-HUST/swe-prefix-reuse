@@ -72,3 +72,19 @@ at `/workspace/my-ascend-workspace/runs/swe-token-continuation/`. Portable prove
 and shape observations live in data/README.md; no local path is required to run the
 public tool. Do not recover an obsolete unscreened sample from that local directory:
 only the checked-in bundle is the accepted input.
+
+## Native internal-DP affinity
+
+The pinned vLLM OpenAI completions endpoint reads `X-data-parallel-rank`;
+`X-Correlation-ID` is not its native routing contract. Two real Qwen35 native
+DP2 deployments (expertTP2 andEP2) answered cold retrieval correctly but returned
+zero cached tokens on the following warm request when the controller left rank
+selection to internal load balancing. Do not mistake a stable cache salt for a
+stable cache owner.
+
+The opt-in `--data-parallel-size N` sends lane modulo N as that native header,
+keeping a lane on the same rank through turns and recycled sessions. It preserves
+prepared prompts, exact output budgets, timing and fresh-play salts. Artifacts
+record declared DP size, policy and per-request rank. CPU HTTP fixtures verify
+opt-in behavior, lane distribution and replacement continuity; real engine
+cache/load acceptance remains required. Servers may ignore unsupported headers.

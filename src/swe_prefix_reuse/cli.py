@@ -23,6 +23,11 @@ def main():
     run_parser.add_argument("--concurrency", type=int, required=True)
     run_parser.add_argument("--duration", type=float, default=60)
     run_parser.add_argument("--chips", type=int, required=True)
+    run_parser.add_argument(
+        "--data-parallel-size",
+        type=int,
+        help="Opt-in native vLLM rank affinity: lane modulo DP size; must match the server",
+    )
     run_parser.add_argument("--server-max-context", type=int, required=True)
     run_parser.add_argument(
         "--server-metadata",

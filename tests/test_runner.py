@@ -1,5 +1,6 @@
 import asyncio
 
+import pytest
 from test_client import endpoint, reply
 
 from swe_prefix_reuse.prepare import SCHEMA
@@ -22,6 +23,54 @@ def workload():
             }
         ],
     }
+
+
+@pytest.mark.parametrize("dp_size", [None, 1, 2])
+def test_native_dp_affinity_is_opt_in_and_survives_session_replacement(dp_size):
+    async def check():
+        seen = []
+
+        async def handler(req):
+            body = await req.json()
+            seen.append((body["cache_salt"], req.headers.get("X-data-parallel-rank")))
+            return await reply(req, delay=0.001)
+
+        async with endpoint(handler) as url:
+            summary, records = await replay(
+                workload(),
+                url=url,
+                model="fixture",
+                concurrency=4,
+                duration=0.12,
+                chips=2,
+                data_parallel_size=dp_size,
+                run_id="affinity-test",
+            )
+        assert summary["valid"]
+        assert len({salt for salt, _ in seen}) > 4
+        for salt, rank in seen:
+            lane = int(salt.split(":")[1])
+            assert rank == (None if dp_size is None else str(lane % dp_size))
+        for row in records:
+            assert row["data_parallel_rank"] == (None if dp_size is None else row["lane"] % dp_size)
+
+    asyncio.run(check())
+
+
+@pytest.mark.parametrize("size", [0, -1, 3, 1.5, True])
+def test_invalid_dp_size_rejected_before_network(size):
+    with pytest.raises(ValueError, match="data_parallel_size"):
+        asyncio.run(
+            replay(
+                workload(),
+                url="unused",
+                model="fixture",
+                concurrency=1,
+                duration=1,
+                chips=2,
+                data_parallel_size=size,
+            )
+        )
 
 
 def test_real_http_closed_loop_prefix_salts_and_concurrency():
