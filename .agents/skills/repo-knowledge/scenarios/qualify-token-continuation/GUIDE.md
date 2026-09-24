@@ -39,8 +39,33 @@ re-deriving AgentX or an independent request-rate runner.
    disturb another server or import accelerator-initializing modules unleased.
 4. Check strict protocol success, prompt identity, actual in-flight occupancy,
    server-side prefix-cache evidence, client bottlenecks and repeatability before
-   comparing performance. v0.1's published verification is CPU protocol + real
-   tokenizer only, not accelerator qualification.
+   comparing performance. The initial v0.1 release was CPU protocol + real
+   tokenizer only; the bounded real-engine observation below is not universal
+   server qualification.
+
+## Real-engine continuation observation (2026-09-24)
+
+Tool commit `59ea20a` (0.1.1), Qwen3.5-35B-A3B BF16, native vLLM 0.25.1 /
+Ascend 0.25.1rc1 TP2 with natural MTP2 completed one 900-second C4 window:
+367 requests, zero failures, all exact-token checks passed, 99.85% full client
+concurrency and maximum observed prompt 80,630 tokens. Separate C2 qualification
+observed cached prompt tokens; server prefix counters also increased during C4.
+The server exited cleanly and the owned-card release was observed. This supports
+this deployment's protocol/continuation compatibility, not SWE answer quality,
+full-256K performance, repeatability or other engine versions.
+
+Local retained evidence is
+`/workspace/my-ascend-workspace/runs/swe-frontier-sequential-20260924/native8/`:
+`qualification/`, `c4/`, `receipt.json`, metric snapshots and `release.json`.
+The prepared-workload identity is in `c4/config.json`; never substitute an earlier
+prepared sample when continuing the campaign.
+
+For multi-rank HTTP relays, preserve **both** cache salt and routing affinity.
+The qualified eight-chip relay requires `X-Correlation-ID`; 0.1.1 sends the
+session salt as that header. A cache salt alone cannot prevent a load balancer
+from routing successive turns to different replicas. Header support was verified
+by the CPU protocol fixture; an eight-chip inference result must still establish
+its own cache/ownership evidence before publication.
 
 Local preparation evidence from initial development lives outside the repository
 at `/workspace/my-ascend-workspace/runs/swe-token-continuation/`. Portable provenance
