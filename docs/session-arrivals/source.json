@@ -1,0 +1,26 @@
+{
+  "schema": "session-observation-profile/v1",
+  "call_fields": [
+    "output_anchor_offset_s",
+    "input_tokens_total",
+    "prefix_tokens",
+    "newly_append_tokens",
+    "output_tokens"
+  ],
+  "provenance": {
+    "release": "https://github.com/uw-syfi/TraceLab/releases/tag/v0.0.2",
+    "license": "CC-BY-4.0",
+    "authors": "Kan Zhu et al. / UW TraceLab",
+    "method": "CubeLander/ruijie-workshop@ddcec06550b531b2cde1027c187d317d21b8da94",
+    "raw_sha256": "11ce51ec0a25e3d1d95b025bca2f7d1647e47571eb7cc968acd5fc64d4b4fb65",
+    "raw_bytes": 100939722
+  },
+  "semantics": {
+    "timing": "first-model-output to first-model-output; NOT arrival or idle",
+    "prefix_tokens": "API-accounted cache-read; NOT prefix identity or storage IO",
+    "weighting": "uniform sessions within provider; includes singletons",
+    "censoring": "observed histories; no complete-lifetime claim",
+    "privacy": "no raw session/user IDs, content, or absolute timestamps exported"
+  },
+  "verification": "All 21 session-stat metrics per provider match ruijie-workshop saved session-stats.json at method commit; all 665453 records pass token-accounting validation."
+}

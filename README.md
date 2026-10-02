@@ -174,3 +174,10 @@ The bundled trajectories have also been compiled with the actual Qwen3.5 tokeniz
 
 Code: [Apache-2.0](LICENSE). Adapted upstream attribution: [NOTICE](NOTICE).
 Bundled data: [CC-BY-4.0 with NVIDIA attribution](data/README.md).
+
+## Fixed-rate new sessions with waiting continuations
+
+For the opt-in task-per-session client, frozen post-completion delays and client
+latency instrumentation, see [session arrivals](docs/SESSION-ARRIVALS.md). The
+original closed-loop `run` command is unchanged. Expanded-source acquisition is
+tracked separately; the client refuses to recycle an insufficient trajectory pool.

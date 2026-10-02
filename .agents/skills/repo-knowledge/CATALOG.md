@@ -18,3 +18,7 @@ and inquiry, not individual assets, lifecycle state, or chronology.
   tokenizer/server or validating measurement semantics without confusing a protocol
   fixture with inference performance. Read
   [`scenarios/qualify-token-continuation/GUIDE.md`](scenarios/qualify-token-continuation/GUIDE.md).
+
+- **Build fixed-rate SWE session arrivals and inspect waiting-pool client cost:**
+  read [build-session-arrival-workloads](scenarios/build-session-arrival-workloads/GUIDE.md)
+  for the accepted completion-relative delay protocol, source expansion and CPU evidence.

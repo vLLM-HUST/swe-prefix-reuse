@@ -1,0 +1,140 @@
+{
+  "max_context": 262144,
+  "providers": {
+    "claude": {
+      "counts": {
+        "sessions": 5319,
+        "calls": 305445,
+        "singleton": 489,
+        "initial_cached_nonzero": 3120,
+        "zero_input": 246,
+        "zero_output": 260,
+        "calls_over_context": 92871,
+        "whole_session_append_feasible": 4561,
+        "whole_session_fits_context": 4966,
+        "whole_session_both": 4446,
+        "calls_in_whole_append_sessions": 109284,
+        "calls_in_whole_fit_sessions": 127994,
+        "pairs": 300126,
+        "append_length_feasible": 295941,
+        "input_decreases": 1041,
+        "cached_gt_prev_input_output": 1170,
+        "next_cache_zero": 4954,
+        "zero_gap": 0
+      },
+      "signed_append_delta": {
+        "n": 300126,
+        "mean": 327.1649907039044,
+        "p50": 238.0,
+        "p90": 2408.0,
+        "p95": 4248.0,
+        "maximum": 309624,
+        "zeros": 223
+      },
+      "negative_delta_magnitude": {
+        "n": 4185,
+        "mean": 51202.73572281959,
+        "p50": 418.0,
+        "p90": 156373.9999999997,
+        "p95": 354911.1999999999,
+        "maximum": 968600,
+        "zeros": 0
+      },
+      "max_context_by_session": {
+        "n": 5319,
+        "mean": 100422.55649558187,
+        "p50": 65906.0,
+        "p90": 187675.99999999988,
+        "p95": 321619.9999999994,
+        "maximum": 1006780,
+        "zeros": 16
+      },
+      "initial_input": {
+        "n": 5319,
+        "mean": 25718.370934386163,
+        "p50": 18822.0,
+        "p90": 38603.0,
+        "p95": 49038.19999999991,
+        "maximum": 185530,
+        "zeros": 16
+      },
+      "fully_appendable_in_context_depth": {
+        "n": 4446,
+        "mean": 18.83783175888439,
+        "p50": 11.0,
+        "p90": 43.0,
+        "p95": 67.0,
+        "maximum": 568,
+        "zeros": 0
+      }
+    },
+    "codex": {
+      "counts": {
+        "sessions": 2739,
+        "calls": 360008,
+        "singleton": 98,
+        "initial_cached_nonzero": 2670,
+        "zero_input": 21,
+        "zero_output": 21,
+        "calls_over_context": 1316,
+        "pairs": 357269,
+        "append_length_feasible": 341767,
+        "input_decreases": 11660,
+        "cached_gt_prev_input_output": 12613,
+        "next_cache_zero": 656,
+        "zero_gap": 3237,
+        "whole_session_append_feasible": 1575,
+        "whole_session_fits_context": 2725,
+        "whole_session_both": 1575,
+        "calls_in_whole_append_sessions": 35359,
+        "calls_in_whole_fit_sessions": 347053
+      },
+      "signed_append_delta": {
+        "n": 357269,
+        "mean": 162.7725439374813,
+        "p50": 182.0,
+        "p90": 5653.0,
+        "p95": 12271.0,
+        "maximum": 224442,
+        "zeros": 7
+      },
+      "negative_delta_magnitude": {
+        "n": 15502,
+        "mean": 52427.627789962586,
+        "p50": 2640.5,
+        "p90": 196728.3,
+        "p95": 209000.99999999997,
+        "maximum": 338201,
+        "zeros": 0
+      },
+      "max_context_by_session": {
+        "n": 2739,
+        "mean": 108252.39722526469,
+        "p50": 84366.0,
+        "p90": 235436.40000000005,
+        "p95": 243684.0,
+        "maximum": 462845,
+        "zeros": 1
+      },
+      "initial_input": {
+        "n": 2739,
+        "mean": 18628.02373128879,
+        "p50": 14642.0,
+        "p90": 26391.20000000001,
+        "p95": 28977.999999999993,
+        "maximum": 462569,
+        "zeros": 18
+      },
+      "fully_appendable_in_context_depth": {
+        "n": 1575,
+        "mean": 22.45015873015873,
+        "p50": 12.0,
+        "p90": 51.600000000000136,
+        "p95": 79.0,
+        "maximum": 256,
+        "zeros": 0
+      }
+    }
+  },
+  "scope": "length compatibility only; a negative delta does not prove compaction, and a nonnegative delta does not prove content-prefix identity"
+}

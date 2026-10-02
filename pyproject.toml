@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "swe-prefix-reuse"
-version = "0.1.2"
+version = "0.2.0.dev0"
 description = "Closed-loop SWE token-continuation serving benchmark, adapted from vLLM bench serve"
 requires-python = ">=3.10"
 license = "Apache-2.0"
@@ -17,6 +17,7 @@ test = ["pytest>=8", "ruff>=0.9"]
 
 [project.scripts]
 swe-prefix-reuse = "swe_prefix_reuse.cli:main"
+swe-session-arrivals = "swe_prefix_reuse.arrival_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
