@@ -12,8 +12,8 @@ dependencies = ["aiohttp>=3.9,<4"]
 
 [project.optional-dependencies]
 prepare = ["transformers>=5.14.1,<6", "jinja2>=3.1.6,<4"]
-data = ["pyarrow>=16"]
-test = ["pytest>=8", "ruff>=0.9"]
+data = ["pyarrow>=16", "huggingface-hub"]
+test = ["pytest>=8", "ruff>=0.9", "pyarrow>=16", "jinja2>=3.1.6"]
 
 [project.scripts]
 swe-prefix-reuse = "swe_prefix_reuse.cli:main"

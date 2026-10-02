@@ -32,3 +32,8 @@ Actual expanded source acquisition remained blocked by HF TLS on2026-10-02;
 no expanded real-model run has been claimed. Don't mislabel a fixture or the
 original8 trajectories as the expanded dataset. Preserve source licenses and do
 not execute trace tool calls.
+
+The initialization entrypoint is now `scripts/init_trajectory_pool.py`: downloads
+on demand and counts AFTER actual tokenizer/context qualification. For repeatable
+pool testing use the sibling [test-trajectory-pool](../test-trajectory-pool/GUIDE.md)
+scenario rather than manually composing acquisition and acceptance rules.

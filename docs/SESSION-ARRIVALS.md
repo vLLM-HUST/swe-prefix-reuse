@@ -43,22 +43,28 @@ separately. Short SWE first prompts are reported honestly, not padded to make P 
 
 ## Prepare content and an immutable arrival plan
 
-Existing content preparation and strict token protocol are unchanged. To expand
-beyond the eight-row example, first obtain contiguous pinned Open-SWE shards and
-Hugging Face `local_dir` metadata (revision in `data/README.md`). Then:
+Use the one-command initializer with an **existing local tokenizer**:
 
 ```bash
 pip install -e '.[test,data,prepare]'
-python scripts/expand_swe.py --dataset /path/to/Open-SWE-Traces \
-  --count 512 --output prepared/swe-512.json.gz
-swe-prefix-reuse prepare --source prepared/swe-512.json.gz \
-  --tokenizer /path/to/Qwen3.5-35B-A3B --max-context 262144 \
-  --output prepared/qwen35-expanded.json
-# Inspect whole-trajectory rejections; the accepted count, not source count, matters.
+python scripts/init_trajectory_pool.py \
+  --tokenizer /path/to/Qwen3.5-35B-A3B --count 512 --max-context 262144 \
+  --dataset-cache prepared/open-swe-download --max-shards 2 \
+  --output prepared/pool-512
+```
 
+`--count` means accepted trajectories AFTER tokenizer/context checks, not raw rows.
+Downloads are pinned, sequential and on demand; `--max-shards` bounds acquisition.
+If too few qualify, initialization fails with a receipt instead of emitting a short
+pool. Reuse the download cache on another attempt with a fresh output directory.
+`--offline` disables downloading. No model weights or remote tokenizer code are loaded.
+A successful directory contains `workload.json`, `source.json.gz`, `receipt.json`.
+The existing `expand_swe.py` remains available for source-only selection.
+
+```bash
 # TraceLab profile preparation/source/license are documented in session-arrivals/README.md.
 python -m swe_prefix_reuse.arrival_cli prepare \
-  --workload prepared/qwen35-expanded.json --profile prepared/tracelab/profile.json.gz \
+  --workload prepared/pool-512/workload.json --profile prepared/tracelab/profile.json.gz \
   --provider codex --rate 0.1 --duration 1800 --seed 20261002 \
   --output prepared/arrival-plan.json
 ```
@@ -79,7 +85,7 @@ real-data preparation. The original eight rows are only protocol material.
 
 ```bash
 python -m swe_prefix_reuse.arrival_cli run \
-  --workload prepared/qwen35-expanded.json --plan prepared/arrival-plan.json \
+  --workload prepared/pool-512/workload.json --plan prepared/arrival-plan.json \
   --endpoint http://127.0.0.1:8000/v1/completions --model MODEL \
   --server-max-context 262144 --chips 2 --connections 256 \
   --server-metadata /path/to/redacted-server-metadata.json \
@@ -139,3 +145,5 @@ send second turns. Continuation behavior is covered separately by HTTP tests.
 **These are protocol fixtures sharing the same event loop/CPU with the fake server,
 not standalone client-capacity ceilings, model throughput, or deployment qualification.**
 No accelerator experiment, PD backend modification, or public publication occurred.
+
+The repository Skill includes a [trajectory-pool test scenario](../.agents/skills/repo-knowledge/scenarios/test-trajectory-pool/GUIDE.md).

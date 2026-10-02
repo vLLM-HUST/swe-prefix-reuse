@@ -22,3 +22,7 @@ and inquiry, not individual assets, lifecycle state, or chronology.
 - **Build fixed-rate SWE session arrivals and inspect waiting-pool client cost:**
   read [build-session-arrival-workloads](scenarios/build-session-arrival-workloads/GUIDE.md)
   for the accepted completion-relative delay protocol, source expansion and CPU evidence.
+
+- **Initialize and test a trajectory pool:** read
+  [test-trajectory-pool](scenarios/test-trajectory-pool/GUIDE.md) for exact accepted
+  counts, frozen schedules, offline gates and the boundary to real serving tests.

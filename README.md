@@ -181,3 +181,21 @@ For the opt-in task-per-session client, frozen post-completion delays and client
 latency instrumentation, see [session arrivals](docs/SESSION-ARRIVALS.md). The
 original closed-loop `run` command is unchanged. Expanded-source acquisition is
 tracked separately; the client refuses to recycle an insufficient trajectory pool.
+
+### Initialize a larger trajectory pool
+
+```bash
+pip install -e '.[prepare,data]'
+python scripts/init_trajectory_pool.py \
+  --tokenizer /path/to/local/tokenizer --count 512 --max-context 262144 \
+  --dataset-cache prepared/open-swe-download --max-shards 2 \
+  --output prepared/pool-512
+```
+
+This downloads pinned shards only as needed and selects in source order until512
+**tokenizer-qualified** whole trajectories are accepted. `--offline` uses a verified
+local cache. No weight downloads, truncation, padding or recycling. A short pool
+fails with a receipt; increase the shard bound explicitly or fix the rejected inputs.
+See the repo-knowledge Skill's
+[trajectory-pool test method](.agents/skills/repo-knowledge/scenarios/test-trajectory-pool/GUIDE.md)
+for offline, protocol and real-server qualification boundaries.
